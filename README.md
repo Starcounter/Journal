@@ -1,4 +1,4 @@
-# Journal
+# Release Journal
 
 A list of all release notes from all Starcounter-related repositories.
 
