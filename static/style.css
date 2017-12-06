@@ -62,7 +62,7 @@
 }
 
 .markdown-body {
-    max-width: 1300px;
+    max-width: 1500px;
     width: 100%;
     display: inline-block;
 }
@@ -74,7 +74,7 @@ body {
 
 .markdown-body ol,
 .markdown-body ul {
-    padding-left: 2.7%;
+    padding-left: 0
 }
 
 button {

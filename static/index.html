@@ -16,7 +16,7 @@
 
     <div id="app" class="markdown-body">
         <h1>Starcounter Journal</h1>
-        <p>A list of all release notes from all Starcounter-related repositories.</p>
+        <p>A list of all release notes from all Starcounter-related repositories. Sorted by release date DESC</p>
         <div>
             <p class="update-date">Last updated: {{updatedOn}}</p>
             <button v-on:click="markAllAsRead()">Mark all as read</button>
@@ -26,35 +26,28 @@
             Loading...
         </div>
         <ul class="bullet-less">
-            <li v-for="item in items" v-bind:class="item.unreadsCount == 0 ? 'read' : ''">
-                <h1>{{item.name}}
-                    <span class="badge" title="Unread releases">{{item.unreadsCount}}</span>
-                </h1>
-                <ul class="bullet-less">
-                    <li v-for="repo in item.repos">
-                        <h2>
-                            <a target="_blank" v-bind:href="'https://github.com/' + repo.repoName">{{repo.repoName}}</a>
-                        </h2>
-                        <div class="releases">
-                            <div v-for="release in repo.releases" v-bind:class="release.read ? 'read' : 'new'">
-                                <table class="release-head-table">
-                                    <tr>
-                                        <td>
-                                            <a target="_blank" v-bind:href="'https://github.com/' + repo.repoName + '/releases/tag/' + release.tag_name">{{release.tag_name}}</a>
-                                        </td>
-                                        <td>
-                                            <span>{{formatDate(release.published_at)}}</span>
-                                        </td>
-                                        <td style="width: 100%; text-align: right">
-                                            <button v-if="!release.read" v-on:click="setAsRead(release)">Mark as read</button>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <div class="release-body" v-html="convertMarkdown(release.body)"></div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+            <li v-for="repo in repos" v-bind:class="itemHasUnreads(repo) ? 'unread' : 'read'">
+                <h2>
+                    <a target="_blank" v-bind:href="'https://github.com/' + repo.repoName">{{repo.repoName}}</a>
+                </h2>
+                <div class="releases">
+                    <div v-for="release in repo.releases" v-bind:class="release.read ? 'read' : 'new'">
+                        <table class="release-head-table">
+                            <tr>
+                                <td>
+                                    <a target="_blank" v-bind:href="'https://github.com/' + repo.repoName + '/releases/tag/' + release.tag_name">{{release.tag_name}}</a>
+                                </td>
+                                <td>
+                                    <span>{{formatDate(release.published_at)}}</span>
+                                </td>
+                                <td style="width: 100%; text-align: right">
+                                    <button v-if="!release.read" v-on:click="setAsRead(release)">Mark as read</button>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="release-body" v-html="convertMarkdown(release.body)"></div>
+                    </div>
+                </div>
             </li>
         </ul>
     </div>
