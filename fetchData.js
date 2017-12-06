@@ -20,27 +20,29 @@ if (client_secret) {
 
 const auth = `?client_id=${client_id}&client_secret=${client_secret}`;
 
-async function getRepoSummary(repoName, repoReleasesURL) {
+async function getRepoReleases(repoName, repoReleasesURL) {
   const repoReleases = await fetch(repoReleasesURL).then(res => res.json());
 
-  const latestTwoReleases = repoReleases.slice(0, 2);
-  const latestTwoReleasesSummary = [];
-
-  latestTwoReleases.forEach(release => {
-    const { body, tag_name, published_at, html_url } = release;
-    latestTwoReleasesSummary.push({
-      body,
+  const releases = [];
+  
+  repoReleases.forEach(release => {
+    const { body, tag_name, published_at, html_url } = release; // pick only interesting rows
+    releases.push({
+      repoName,
+      body: body || 'No notes provided',
       tag_name,
+      hash: `${tag_name}#${repoName}#${published_at}`,
       published_at,
+      published_at_unix_ts: new Date(published_at) / 1000,
       html_url
     });
+
   });
-  return { type: 'repo', repoName, releases: latestTwoReleasesSummary };
+  return releases;
 }
 async function downloadData() {
-  const results = [];
+  const releases = [];
   for (const source of sourcesOfTruth) {
-    const listedOrg = { type: 'org', name: source.username, repos: [] };
 
     const allRepos = await fetch(
       `${baseURL}/users/${source.username}/repos${auth}`
@@ -49,18 +51,15 @@ async function downloadData() {
     for (const repo of allRepos) {
       const repoName = repo.full_name;
       const repoReleasesURL = repo.releases_url.replace('{/id}', '') + auth;
-      const repoSummary = await getRepoSummary(repoName, repoReleasesURL);
-      if (repoSummary.releases.length) {
-        listedOrg.repos.push(repoSummary);
+      const repoReleases = await getRepoReleases(repoName, repoReleasesURL);
+      if (repoReleases.length) {
+        releases.push(...repoReleases);
       }
-    }
-    if (listedOrg.repos.length) {
-      results.push(listedOrg);
     }
   }
   const data = {
     date: new Date().toLocaleString(),
-    results
+    releases
   };
   return data;
 }

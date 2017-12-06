@@ -21,35 +21,30 @@
             <p class="update-date">Last updated: {{updatedOn}}</p>
             <button v-on:click="markAllAsRead()">Mark all as read</button>
             <button onclick="confirm('Really?') && localStorage.clear(); location.reload()">Mark all as unread</button>
+            <div class="search">
+                    <input type="text" v-on:input="updateSearchCriteria" placeholder="🔍 You can search by repo name and org name">
+            </div>
         </div>
+        <hr>
         <div class="overlay" v-if="!appLoaded">
             Loading...
         </div>
-        <ul class="bullet-less">
-            <li v-for="repo in repos" v-bind:class="itemHasUnreads(repo) ? 'unread' : 'read'">
-                <h2>
-                    <a target="_blank" v-bind:href="'https://github.com/' + repo.repoName">{{repo.repoName}}</a>
-                </h2>
-                <div class="releases">
-                    <div v-for="release in repo.releases" v-bind:class="release.read ? 'read' : 'new'">
-                        <table class="release-head-table">
-                            <tr>
-                                <td>
-                                    <a target="_blank" v-bind:href="'https://github.com/' + repo.repoName + '/releases/tag/' + release.tag_name">{{release.tag_name}}</a>
-                                </td>
-                                <td>
-                                    <span>{{formatDate(release.published_at)}}</span>
-                                </td>
-                                <td style="width: 100%; text-align: right">
-                                    <button v-if="!release.read" v-on:click="setAsRead(release)">Mark as read</button>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="release-body" v-html="convertMarkdown(release.body)"></div>
-                    </div>
+        <div class="releases">
+            <div v-for="release in releases" v-bind:class="release.read ? 'read' : 'new'">
+                <div class="col span_1_of_2">
+                    <button :disabled="release.read" title="Mark as read" v-on:click="setAsRead(release)">✔️</button>
+
+                    <a class="release-name" target="_blank" v-bind:href="'https://github.com/' + release.repoName + '/releases/tag/' + release.tag_name">{{release.repoName}} {{release.tag_name}}</a>
+                    –
+                    <time :datetime="release.published_at">{{formatDate(release.published_at)}}</time>
                 </div>
-            </li>
-        </ul>
+                <div>
+                    <div class="release-body" v-html="convertMarkdown(release.body)"></div>
+
+                </div>
+
+            </div>
+        </div>
     </div>
     <script src="app.js"></script>
 </body>

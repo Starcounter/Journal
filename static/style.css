@@ -20,7 +20,11 @@
     border: none;
     font-size: 1.3em
 }
-
+.release-name {
+    font-size: 1.2em;
+    vertical-align: top;
+    
+}
 .markdown-body .release-head-table td:nth-child(1) {
     border-right: 5px solid #eee
 }
@@ -30,12 +34,28 @@
 }
 
 .releases>div {
-    margin-left: 3%;
-    margin-bottom: 5%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #eee;
 }
-
+.releases>div:nth-child(odd) {
+    background: #fCfCFc
+}
+time {
+    font-size: 0.9em;
+    vertical-align: middle;
+}
+.search input {
+    margin: 15px 0px;
+    width: 100%;
+    border: 1px solid #eee;
+    padding: 3px;
+}
+button[disabled='true'] {
+    opacity: 0.2
+}
 .release-body {
-    margin-left: 4.4%;
+    margin: 20px 3%
 }
 
 .badge {
@@ -80,3 +100,4 @@ body {
 button {
     vertical-align: middle;
 }
+
