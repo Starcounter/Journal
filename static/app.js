@@ -14,6 +14,7 @@ function checkAndCache(item) {
   if (isRead) {
     return true;
   }
+  return false;
 }
 
 fetch('/data.json')
@@ -22,7 +23,6 @@ fetch('/data.json')
     let releases = data.releases;
     const tenYearsAgo = 3600 * 24 * 30 * 365 * 10;
     for (const release of releases) {
-      release.read = checkAndCache(release.hash);
       release.read = checkAndCache(release.hash);
 
       /*
