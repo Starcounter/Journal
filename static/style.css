@@ -1,0 +1,82 @@
+.bullet-less {
+    list-style: none;
+}
+
+.read {
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+.read .read {
+    /* two nested reads should still 0.5 (not 0.25) */
+    opacity: 1!important
+}
+
+.markdown-body .release-head-table {
+    width: 100%;
+}
+
+.markdown-body .release-head-table td {
+    border: none;
+    font-size: 1.3em
+}
+
+.markdown-body .release-head-table td:nth-child(1) {
+    border-right: 5px solid #eee
+}
+
+.markdown-body table tr {
+    border: none
+}
+
+.releases>div {
+    margin-left: 3%;
+    margin-bottom: 5%;
+}
+
+.release-body {
+    margin-left: 4.4%;
+}
+
+.badge {
+    border-radius: 4px;
+    background: #eee;
+    padding: 0px 6px;
+}
+
+.top-table td {
+    border: none!important
+}
+
+.overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100%;
+    background: #fff;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.markdown-body {
+    max-width: 1300px;
+    width: 100%;
+    display: inline-block;
+}
+
+body {
+    display: flex;
+    justify-content: center
+}
+
+.markdown-body ol,
+.markdown-body ul {
+    padding-left: 2.7%;
+}
+
+button {
+    vertical-align: middle;
+}

@@ -1,0 +1,22 @@
+{
+  "name": "releasenotes",
+  "version": "1.0.0",
+  "description": "List all Starcounter-related repos release notes\u001b[H\u001b[C\u001b[D\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[Cs\u001b[2~ \u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "now -e CLIENT_ID=@client_id -e CLIENT_SECRET=@client_secret --public"
+  },
+  "author": "Omar Alshaker",
+  "license": "MIT",
+  "devDependencies": {
+    "node-fetch": "^1.7.3"
+  },
+  "env": {
+    "CLIENT_ID": "@client_id",
+    "CLIENT_SECRET": "@client_secret"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
