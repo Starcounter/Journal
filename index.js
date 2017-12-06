@@ -9,7 +9,7 @@ downloadData().then(data => (currentData = data));
 
 setInterval(
   () => downloadData().then(data => (currentData = data)),
-  3600 * 12 * 1000
+  3600 * 1000 // update very hour
 );
 
 app.get('/data.json', (req, res) => {
