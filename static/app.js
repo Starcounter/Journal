@@ -20,11 +20,20 @@ function checkAndCache(item) {
 fetch('/data.json')
   .then(res => res.json())
   .then(data => {
+    let orgs = {};
     let releases = data.releases;
-    const tenYearsAgo = 3600 * 24 * 30 * 365 * 10;
+    const tenYearsAgo = 3600 * 24 * 30 * 365 * 10 * 1000;
     for (const release of releases) {
       release.read = checkAndCache(release.hash);
-
+      const orgName = release.repoName.substr(0, release.repoName.indexOf('/'));
+      if (!orgs[orgName]) {
+        // create a new org
+        orgs[orgName] = {
+          orgName,
+          disabled: JSON.parse(localStorage.getItem(`is-${orgName}-org-disabled`))
+        };
+      }
+      release.org = orgs[orgName];
       /*
       for unread items, this will not change anything since (false * N = 0),
       but for read items it will throw them 10 years back, so they:
@@ -43,18 +52,27 @@ fetch('/data.json')
       computed: {
         releases: function() {
           // `this` points to the vm instance
-          return this.releasesAll.filter(x =>
-            x.repoName.includes(this.searchCriteria)
+          return this.releasesAll.filter(
+            x =>
+              !x.org.disabled &&
+              (!this.searchCriteria /* don't search of criteria is empty */ ||
+                x.repoName.includes(this.searchCriteria))
           );
         }
       },
       data: {
+        orgs,
         releasesAll: releases,
         updatedOn: data.date,
         appLoaded: true,
         searchCriteria: ''
       },
       methods: {
+        toggleOrg(org) {
+          const checkboxChecked = event.target.checked;
+          org.disabled = !checkboxChecked;
+          localStorage.setItem(`is-${org.orgName}-org-disabled`, !checkboxChecked);
+        },
         updateSearchCriteria(e) {
           // debounce
           clearTimeout(this.inputTimeout || 0);

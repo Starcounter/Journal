@@ -25,6 +25,15 @@
     vertical-align: top;
     
 }
+.orgs-of-interest label {
+    display: inline-block;
+    padding: 2px 5px;
+    margin: 3px;
+    vertical-align: top;
+}
+.orgs-of-interest input, span {
+    vertical-align: baseline;
+}
 .markdown-body .release-head-table td:nth-child(1) {
     border-right: 5px solid #eee
 }

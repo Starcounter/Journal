@@ -24,6 +24,12 @@
             <div class="search">
                     <input type="text" v-on:input="updateSearchCriteria" placeholder="🔍 You can search by repo name and org name">
             </div>
+            <div class="orgs-of-interest">
+                <label v-for="org in orgs">
+                    <input :checked="!org.disabled" type="checkbox" v-on:change="toggleOrg(org)">
+                    <span>{{org.orgName}}</span>                    
+                </label>
+            </div>
         </div>
         <hr>
         <div class="overlay" v-if="!appLoaded">
