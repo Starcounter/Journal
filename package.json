@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "deploy": "now alias `now -e CLIENT_ID=@client_id -e CLIENT_SECRET=@client_secret --public` release-journal"
+    "deploy": "deploy.sh"
   },
   "author": "Omar Alshaker",
   "license": "MIT",
