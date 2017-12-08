@@ -17,8 +17,27 @@ function checkAndCache(item) {
   return false;
 }
 
-fetch('/data.json')
-  .then(res => res.json())
+function fetchOrFailOverToCache() {
+  return new Promise(function(resolve, reject) {
+    fetch('/data.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.date) {
+          localStorage.setItem('whole-data', JSON.stringify(data));
+          resolve(data);
+        } else {
+          const data = JSON.parse(localStorage.getItem('whole-data'));
+          if (data && data.length) {
+            resolve(data);
+          } else {
+            reject();
+          }
+        }
+      });
+  });
+}
+
+fetchOrFailOverToCache()
   .then(data => {
     let orgs = {};
     let releases = data.releases;
@@ -30,7 +49,9 @@ fetch('/data.json')
         // create a new org
         orgs[orgName] = {
           orgName,
-          disabled: JSON.parse(localStorage.getItem(`is-${orgName}-org-disabled`))
+          disabled: JSON.parse(
+            localStorage.getItem(`is-${orgName}-org-disabled`)
+          )
         };
       }
       release.org = orgs[orgName];
@@ -46,7 +67,6 @@ fetch('/data.json')
     releases = releases.sort(
       (a, b) => b.published_at_unix_ts - a.published_at_unix_ts
     );
-
     new Vue({
       el: '#app',
       computed: {
@@ -71,7 +91,10 @@ fetch('/data.json')
         toggleOrg(org) {
           const checkboxChecked = event.target.checked;
           org.disabled = !checkboxChecked;
-          localStorage.setItem(`is-${org.orgName}-org-disabled`, !checkboxChecked);
+          localStorage.setItem(
+            `is-${org.orgName}-org-disabled`,
+            !checkboxChecked
+          );
         },
         updateSearchCriteria(e) {
           // debounce
@@ -96,6 +119,30 @@ fetch('/data.json')
           }
           this.releasesAll = newReleases;
         }
+      }
+    });
+  })
+  .catch(e => {
+    document.querySelector('.overlay').innerHTML = '{{overlayMessage}}';
+    
+    new Vue({
+      el: '.overlay',
+      mounted: function() {
+        setInterval(() => {
+          this.timeLeft--;
+          if(this.timeLeft < 1) {
+            window.location.reload();
+          }
+        }, 1000);        
+      },
+      computed: {
+        overlayMessage: function() {
+          return `Oops, it seems like you visited the site when it hasn't been visited for a long time, it will need 30 seconds to collect the data. I'll refresh in ${this.timeLeft} seconds...`
+        }
+      }, 
+      data: {               
+        timeLeft: 30,
+        appLoaded: false
       }
     });
   });

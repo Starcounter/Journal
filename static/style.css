@@ -85,6 +85,8 @@ button[disabled='true'] {
     width: 100%;
     background: #fff;
     z-index: 100;
+    padding: 20px;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center
