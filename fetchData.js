@@ -18,8 +18,14 @@ if (client_secret) {
   console.log('Client secret env var does not exist');
 }
 
+// we append this to every API request for east authuntication
 const auth = `?client_id=${client_id}&client_secret=${client_secret}`;
 
+/**
+ * 
+ * @param {String} repoName the repository name, used for aliasing purposes (request doesn't depend on it)
+ * @param {*} repoReleasesURL the API endpoint where releases array is served
+ */
 async function getRepoReleases(repoName, repoReleasesURL) {
   const repoReleases = await fetch(repoReleasesURL).then(res => res.json());
 
@@ -40,14 +46,19 @@ async function getRepoReleases(repoName, repoReleasesURL) {
   });
   return releases;
 }
+/**
+ * Downloads all listed repositories data
+ */
 async function downloadData() {
   const releases = [];
   for (const source of sourcesOfTruth) {
 
+    // fetch all repos of a given organizaion/user
     const allRepos = await fetch(
       `${baseURL}/users/${source.username}/repos${auth}`
     ).then(res => res.json());
 
+    // fetch releases of every repo
     for (const repo of allRepos) {
       const repoName = repo.full_name;
       const repoReleasesURL = repo.releases_url.replace('{/id}', '') + auth;
@@ -57,6 +68,7 @@ async function downloadData() {
       }
     }
   }
+  // add date information to the data, to be able to show last updated time
   const data = {
     date: new Date().toLocaleString(),
     releases

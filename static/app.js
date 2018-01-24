@@ -1,3 +1,4 @@
+// showdown convertor is included in the HTML from a CDN
 const converter = new showdown.Converter();
 function convertMarkdown(md) {
   md = md.replace(/```.*/g, '```'); // remove GH taste (```html etc)
@@ -9,7 +10,7 @@ function escapeHTML(html) {
     .appendChild(document.createTextNode(html)).parentNode.innerHTML;
 }
 
-function checkAndCache(item) {
+function isRead(item) {
   const isRead = localStorage.getItem(item);
   if (isRead) {
     return true;
@@ -43,7 +44,7 @@ fetchOrFailOverToCache()
     let releases = data.releases;
     const tenYearsAgo = 3600 * 24 * 30 * 365 * 10 * 1000;
     for (const release of releases) {
-      release.read = checkAndCache(release.hash);
+      release.read = isRead(release.hash);
       const orgName = release.repoName.substr(0, release.repoName.indexOf('/'));
       if (!orgs[orgName]) {
         // create a new org
@@ -71,7 +72,7 @@ fetchOrFailOverToCache()
       el: '#app',
       computed: {
         releases: function() {
-          // `this` points to the vm instance
+          // `this` points to the vue instance
           return this.releasesAll.filter(
             x =>
               !x.org.disabled &&
@@ -123,6 +124,7 @@ fetchOrFailOverToCache()
     });
   })
   .catch(e => {
+    // the VM was killed by now.sh, now it's up but there is no cached data yet, display an apology
     document.querySelector('.overlay').innerHTML = '{{overlayMessage}}';
     
     new Vue({
